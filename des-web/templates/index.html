@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>DES Cipher Lab</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans:wght@400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+
+<div class="shell">
+
+  <aside class="sidebar">
+    <div class="brand">
+      <span class="brand-mark">DES</span>
+      <span class="brand-sub">Cipher Lab</span>
+    </div>
+
+    <div class="field">
+      <label for="keyInput">Khóa (passphrase bất kỳ)</label>
+      <input id="keyInput" type="text" placeholder="vd: MonKhoaBiMat" value="MonKhoaBiMat">
+      <p class="hint">Được rút gọn thành khóa DES 8 byte để minh họa.</p>
+    </div>
+
+    <nav class="tabs">
+      <button class="tab-btn active" data-tab="text">Văn bản</button>
+      <button class="tab-btn" data-tab="file">Tệp tin</button>
+      <button class="tab-btn" data-tab="compare">ECB vs CBC</button>
+    </nav>
+
+    <div class="sidebar-foot">
+      <p>Feistel network · 16 vòng · khóa 56-bit hiệu dụng</p>
+    </div>
+  </aside>
+
+  <main class="content">
+
+    <header class="hero">
+      <h1>Khối dữ liệu, từng 8 byte một</h1>
+      <p>DES mã hóa theo khối 64-bit. Mỗi ô dưới đây là một khối — theo dõi chúng đổi màu khi bạn mã hóa hoặc giải mã.</p>
+      <div id="blockStrip" class="block-strip">
+        <div class="block-placeholder">Chưa có dữ liệu — hãy chạy một thao tác bên dưới</div>
+      </div>
+    </header>
+
+    <!-- TAB: TEXT -->
+    <section class="panel" id="panel-text">
+      <h2>Mã hóa / giải mã văn bản</h2>
+
+      <div class="grid-2">
+        <div class="field">
+          <label for="plaintextInput">Văn bản gốc</label>
+          <textarea id="plaintextInput" rows="4" placeholder="Nhập nội dung cần mã hóa...">Hello DES 1977</textarea>
+          <button class="btn btn-primary" id="btnEncryptText">Mã hóa</button>
+        </div>
+
+        <div class="field">
+          <label for="ivInput">IV (hex)</label>
+          <input id="ivInput" type="text" readonly>
+          <label for="ciphertextInput">Ciphertext (hex)</label>
+          <textarea id="ciphertextInput" rows="4" placeholder="Ciphertext sẽ hiện ở đây, hoặc dán vào để giải mã"></textarea>
+          <button class="btn" id="btnDecryptText">Giải mã</button>
+        </div>
+      </div>
+
+      <div class="output" id="textOutput"></div>
+    </section>
+
+    <!-- TAB: FILE -->
+    <section class="panel hidden" id="panel-file">
+      <h2>Mã hóa / giải mã tệp tin</h2>
+      <p class="muted">Chọn một tệp bất kỳ. Tệp mã hóa sẽ có đuôi <code>.enc</code>; khi giải mã, chọn lại tệp <code>.enc</code> đó với cùng khóa.</p>
+
+      <div class="grid-2">
+        <div class="field">
+          <label>Mã hóa tệp</label>
+          <input type="file" id="fileEncryptInput">
+          <button class="btn btn-primary" id="btnEncryptFile">Mã hóa &amp; tải xuống</button>
+        </div>
+        <div class="field">
+          <label>Giải mã tệp (.enc)</label>
+          <input type="file" id="fileDecryptInput">
+          <button class="btn" id="btnDecryptFile">Giải mã &amp; tải xuống</button>
+        </div>
+      </div>
+
+      <div class="output" id="fileOutput"></div>
+    </section>
+
+    <!-- TAB: COMPARE -->
+    <section class="panel hidden" id="panel-compare">
+      <h2>ECB để lộ khối lặp lại, CBC thì không</h2>
+      <p class="muted">Văn bản dưới đây cố tình lặp lại một khối 8 byte 4 lần. Quan sát ciphertext của ECB — các khối giống nhau vẫn giữ nguyên mẫu.</p>
+
+      <div class="field">
+        <label for="compareInput">Văn bản thử (nên có khối lặp lại)</label>
+        <input id="compareInput" type="text" value="AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA">
+        <button class="btn btn-primary" id="btnCompare">Chạy so sánh</button>
+      </div>
+
+      <div class="compare-results" id="compareResults"></div>
+    </section>
+
+  </main>
+</div>
+
+<script src="{{ url_for('static', filename='script.js') }}"></script>
+</body>
+</html>
